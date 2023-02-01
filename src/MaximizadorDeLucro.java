@@ -62,6 +62,27 @@ public class MaximizadorDeLucro {
         for(int i : this.solucao) {
             System.out.print(i + " | " );
         }
+
+        System.out.println("");
+        System.out.println("");
+
+        this.calcularLucro();
+    }
+
+    public void calcularLucro() {
+        double lucro = 0;
+
+        for (int i = 0; i <= this.solucao.length - 1; i ++) {
+            if(this.solucao[i] == 1) {
+                for (Objeto obj : this.veiculo.objetos) {
+                    if (i + 1 == obj.id ){
+                        lucro += obj.lucro;
+                    }
+                }
+            }
+        }
+
+        System.out.println("LUCRO TOTAL: " + String.format("%.2f", lucro));
     }
 
 }
