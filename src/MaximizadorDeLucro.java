@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -26,28 +27,41 @@ public class MaximizadorDeLucro {
 
 
         this.solucao = new int[objetos.size()];
+        for(int i : this.solucao) {
+            i = 0;
+        }
 
-        this.imprimeListaDeObjetos();
+        this.imprimeListaDeObjetos(this.objetos, "Lista de Objetos:");
     }
 
-    public void imprimeListaDeObjetos() {
-        for(Objeto objeto : this.objetos) {
+    public void imprimeListaDeObjetos(ArrayList<Objeto> objetos, String titulo) {
+        System.out.println(titulo);
+        for(Objeto objeto :objetos) {
             System.out.print(objeto.id + "(" + String.format("%.2f",objeto.getRazaoLucroPeso())+") | " );
         }
+
+        System.out.println("");
+        System.out.println("");
     }
 
     public void otimizar() {
         Collections.sort(this.objetos, Objeto.taxaComparator);
 
         for(Objeto objeto : this.objetos) {
-            // Verificar se objeto passa do capacidade do veículoo, caso nao, adicionar ele na lista do veiculo
+            // Verificar se objeto passa do capacidade do veículoo, caso nao, adicionar ele na lista do veiculo.
+            // Levando em conta que ja possa ter objetos ocupando a capacidade do veículo
+            if(objeto.peso < veiculo.getCapacidadeDisponivel()) {
+                this.veiculo.insereObjeto(objeto);
+                this.solucao[objeto.id - 1] = 1;
+            }
+        }
 
+        this.imprimeListaDeObjetos(veiculo.objetos, "Lista de Objetos Carregados:");
+
+        System.out.println("VETOR SOLUÇÃO");
+        for(int i : this.solucao) {
+            System.out.print(i + " | " );
         }
     }
-
-    public void adicionarObjetoNoVeicuo (Objeto objeto, Veiculo veiculo) {
-
-    }
-
 
 }
