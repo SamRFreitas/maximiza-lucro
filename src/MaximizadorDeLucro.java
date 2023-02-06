@@ -13,7 +13,7 @@ public class MaximizadorDeLucro {
         this.veiculo = new Veiculo(2000);
 
         Objeto obj1 = new Objeto(1, 400, 200);
-        Objeto obj2 = new Objeto(2, 500, 200);
+        Objeto obj2 = new Objeto(2, 200, 200);
         Objeto obj3 = new Objeto(3, 700, 300);
         Objeto obj4 = new Objeto(4, 900, 400);
         Objeto obj5 = new Objeto(5, 600, 400);
@@ -71,18 +71,21 @@ public class MaximizadorDeLucro {
 
     public void calcularLucro() {
         double lucro = 0;
+        double peso = 0;
 
         for (int i = 0; i <= this.solucao.length - 1; i ++) {
             if(this.solucao[i] == 1) {
                 for (Objeto obj : this.veiculo.objetos) {
                     if (i + 1 == obj.id ){
                         lucro += obj.lucro;
+                        peso += obj.peso;
                     }
                 }
             }
         }
 
         System.out.println("LUCRO TOTAL: " + String.format("%.2f", lucro));
+        System.out.println("PESO TOTAL: " + String.format("%.2f", peso));
     }
 
 }
