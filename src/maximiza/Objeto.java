@@ -1,3 +1,5 @@
+package maximiza;
+
 import java.util.Comparator;
 
 public class Objeto {
@@ -5,6 +7,8 @@ public class Objeto {
     int id;
     double peso;
     double lucro;
+
+    public boolean selecionado;
 
     public Objeto (int id, double peso, double lucro) {
         this.id= id;

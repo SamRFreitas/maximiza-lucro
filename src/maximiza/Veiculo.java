@@ -1,3 +1,4 @@
+package maximiza;
 
 import java.util.ArrayList;
 

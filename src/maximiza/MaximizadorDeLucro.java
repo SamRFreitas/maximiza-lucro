@@ -1,3 +1,5 @@
+package maximiza;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,7 +11,7 @@ public class MaximizadorDeLucro {
 
     Veiculo veiculo;
 
-    MaximizadorDeLucro() {
+    public MaximizadorDeLucro() {
         this.veiculo = new Veiculo(2000);
 
         Objeto obj1 = new Objeto(1, 400, 200);
