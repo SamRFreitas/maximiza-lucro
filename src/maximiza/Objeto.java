@@ -8,7 +8,6 @@ public class Objeto {
     double peso;
     public double lucro;
 
-    public boolean selecionado;
 
     public Objeto (int id, double peso, double lucro) {
         this.id= id;
