@@ -15,6 +15,8 @@ public class Individuo {
     public Individuo(ArrayList<Objeto> objetos){
         this.objetos = objetos;
         this.gerarCromossomos();
+
+        this.fitnessFunction();
     }
 
     public void gerarCromossomos() {
@@ -43,6 +45,21 @@ public class Individuo {
             System.out.print(objeto.selecionado + " | ");
         }
 
+        System.out.println();
+
+    }
+
+    public double fitnessFunction() {
+        double soma = 0;
+
+        for(Objeto objeto : this.objetos) {
+            if(objeto.selecionado) {
+                soma += objeto.lucro;
+            }
+        }
+
+        System.out.println(soma);
+        return soma;
     }
 
 }

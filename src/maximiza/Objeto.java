@@ -6,7 +6,7 @@ public class Objeto {
 
     int id;
     double peso;
-    double lucro;
+    public double lucro;
 
     public boolean selecionado;
 

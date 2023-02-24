@@ -2,11 +2,11 @@ package genetico;
 
 import java.util.ArrayList;
 
-public class Geracao {
+public class Populacao {
     ArrayList<Individuo> individuos = new ArrayList<Individuo>();
     int quantidadeDeIndividuos = individuos.size();
 
-    public Geracao (ArrayList<Individuo> individuos) {
+    public Populacao(ArrayList<Individuo> individuos) {
         this.individuos = individuos;
     }
 
