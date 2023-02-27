@@ -5,6 +5,7 @@ import maximiza.Objeto;
 
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Random;
 
 
@@ -64,8 +65,21 @@ public class Individuo {
 
         this.fitness = soma;
 
-
     }
+
+    public static Comparator<Individuo> fitComparator = new Comparator<Individuo>() {
+        @Override
+        public int compare(Individuo individuo1, Individuo individuo2) {
+
+            if (individuo1.fitness > individuo2.fitness) {
+                return -1;
+            } else if (individuo2.fitness > individuo1.fitness) {
+                return 1;
+            }
+
+            return 0;
+        }
+    };
 
 }
 

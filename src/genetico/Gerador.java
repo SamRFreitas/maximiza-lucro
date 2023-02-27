@@ -4,7 +4,10 @@ package genetico;
 import maximiza.Objeto;
 
 
+import javax.management.relation.Role;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
 
 
 public class Gerador {
@@ -33,10 +36,17 @@ public class Gerador {
             }
         }
 
+        Collections.sort(this.populacao, Individuo.fitComparator);
+
         this.calcularProbabilidades();
 
-        this.mostrarPopulacao();
+        Print.mostrarPopulacao(this.populacao);
 
+        Roleta roleta = new Roleta(this.populacao);
+
+
+
+        //this.selecionarPares();
 
     }
 
@@ -52,23 +62,48 @@ public class Gerador {
         }
     }
 
-    public void mostrarPopulacao() {
+    public void selecionarPares() {
 
-        for(Individuo individuo :  this.populacao) {
-            System.out.print("X"+ individuo.geracao + "," +individuo.indice + " ");
-            individuo.mostrarCromossomos();
-            System.out.print(" | Fit: " + individuo.fitness + " ");
-            System.out.print(" | Prob: " + individuo.probabilidade + " ");
-            System.out.println();
+        ArrayList<Integer> probabilidadesDaPopulacao = new ArrayList<>();
+        ArrayList<Individuo> populacaoRoleta = new ArrayList<Individuo>(this.populacao);
+
+        //this.mostrarPopulacao(populacaoRoleta);
+
+        //populacaoRoleta.remove(populacaoRoleta.get(0));
+        //populacaoRoleta.remove(populacaoRoleta.get(0));
+
+        //this.mostrarPopulacao(populacaoRoleta);
+
+        for(Individuo individuo : populacaoRoleta) {
+            int porcentagem =  (int) Math.round(individuo.probabilidade * 100);
+            probabilidadesDaPopulacao.add(porcentagem);
         }
 
-    }
 
-    public void selecionarPares() {
-        // PREENCHER UM VETOR BASEADO NA PROBABILIDADE DE ESCOLHA DO INDIVIDUDO
-        //int[] vetorPorcentagem = ;
 
-        //
+        //PREENCHER UM VETOR BASEADO A PROBABILIDADE DE ESCOLHA DO INDIVIDUDO
+        ArrayList<Integer> vetorPorcentagem = new ArrayList<Integer>(100);
+
+
+        for(int porcentagem : probabilidadesDaPopulacao) {
+            for(int i=0; i < porcentagem; i++) {
+                vetorPorcentagem.add(porcentagem);
+                System.out.println("Index: "+ (vetorPorcentagem.size()-1) + " Value: " + porcentagem);
+            }
+        }
+
+        Random random = new Random();
+
+        int index = random.nextInt(99);
+        int  probabilidadeEscolhida = vetorPorcentagem.get(index);
+
+
+        System.out.println("Index: " + index);
+        System.out.println("Porcentagem escolhida: " + probabilidadeEscolhida);
+
+
+
+
     }
 
 
