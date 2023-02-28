@@ -3,6 +3,7 @@ import genetico.Individuo;
 import maximiza.MaximizadorDeLucro;
 import maximiza.Objeto;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -23,6 +24,7 @@ public class Main {
         objetos.add(obj5);
 
         Gerador gerador =  new Gerador(1, 0.05, 1, 8, objetos);
+
     }
 
 }
