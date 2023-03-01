@@ -3,8 +3,10 @@ package genetico;
 import java.util.ArrayList;
 
 public class Print {
-    public static void mostrarPopulacao(ArrayList<Individuo> populacao) {
+    public static void mostrarPopulacao(ArrayList<Individuo> populacao, String titulo) {
         System.out.println("---------------------------------------");
+        System.out.println(titulo);
+
 
         for(Individuo individuo :  populacao) {
             System.out.print("X"+ individuo.geracao + "," +individuo.indice + " ");

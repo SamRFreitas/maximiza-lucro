@@ -13,17 +13,15 @@ public class Roleta {
         this.populacao = new ArrayList<>(populacao);
         this.populacaoAtual = new ArrayList<>(populacao);
 
-        ArrayList<Integer> probabilidadesDaPopulacaoAtual = this.criarVetorComAsProbabilidadesDeEscolha(this.populacao);
+        this.avaliarPopulacao(this.populacao);
+        Print.mostrarPopulacao(this.populacao, "Populacao Inicial Avaliada: ");
 
-        ArrayList<Integer> vetorPorcentagem = this.preencherVetorPorcentagem(probabilidadesDaPopulacaoAtual);
+        this.girarRoleta();
 
-        this.girarRoleta(vetorPorcentagem);
-
-        System.out.println("Selecionados: ");
-        Print.mostrarPopulacao(this.individuosSelecionados);
+        this.avaliarPopulacao(this.individuosSelecionados);
     }
 
-    public void calcularProbabilidades (ArrayList<Individuo> populacao) {
+    public void avaliarPopulacao (ArrayList<Individuo> populacao) {
         double fitnessTotal = 0;
 
         for(Individuo individuo : populacao) {
@@ -59,19 +57,17 @@ public class Roleta {
         for(int porcentagem : probabilidadesDaPopulacaoAtual) {
             for(int i=0; i < porcentagem; i++) {
                 vetorPorcentagem.add(porcentagem);
-                System.out.println("Index: "+ (vetorPorcentagem.size()-1) + " Value: " + porcentagem);
             }
         }
 
         return vetorPorcentagem;
     }
 
-    public void girarRoleta(ArrayList<Integer> vetorPorcentagem) {
+    public void girarRoleta() {
 
         while (!this.populacaoAtual.isEmpty()) {
-            System.out.println("Populacao Atual: ");
-            Print.mostrarPopulacao(this.populacaoAtual);
-
+            // Quando o Fit é zero, esse indivíduo nunca entra no vetorPorcentagem e nunca é selecionado,
+            // ficando sempre o ultimo no vetor populacaoAtual
             if(this.populacaoAtual.get(0).fitness == 0 ){
 
                 this.individuosSelecionados.add(this.populacaoAtual.get(0));
@@ -79,27 +75,16 @@ public class Roleta {
 
             }
             else {
-
                 Random random = new Random();
 
                 int index = random.nextInt(99);
+                ArrayList<Integer> vetorPorcentagem = this.calcularVetorPorcentagem();
                 while (vetorPorcentagem.get(index) == -1) {
                     index = random.nextInt(99);
                 }
+
                 int probabilidadeEscolhida = vetorPorcentagem.get(index);
-                vetorPorcentagem = tirarProbabilidadeEscolhidaDoVetorPorcentagem(probabilidadeEscolhida, vetorPorcentagem);
 
-                for (int i = 0; i < vetorPorcentagem.size() - 1; i++) {
-                    System.out.println("Index: " + i + " Value: " + vetorPorcentagem.get(i));
-                }
-
-
-                System.out.println("Index: " + index);
-                System.out.println("Porcentagem escolhida: " + probabilidadeEscolhida);
-
-                // Remover e recalcular a probabilidade de escolha do individudo?
-                // OU
-                // Limpar vetor, e se cair ali rodar de novo?
                 Individuo individuo = selecionarIndividuoResultadoDaRoleta(probabilidadeEscolhida);
                 this.individuosSelecionados.add(individuo);
                 this.populacaoAtual.remove(individuo);
@@ -111,24 +96,13 @@ public class Roleta {
 
     }
 
-    public ArrayList<Integer> tirarProbabilidadeEscolhidaDoVetorPorcentagem(int probabilidadeEscolhida, ArrayList<Integer> vetorPorcentagem) {
+    public ArrayList<Integer> calcularVetorPorcentagem() {
+        this.avaliarPopulacao(this.populacaoAtual);
+        ArrayList<Integer> probabilidadesDaPopulacaoAtual = new ArrayList<>(this.criarVetorComAsProbabilidadesDeEscolha(this.populacaoAtual));
 
-        ArrayList<Integer> vetor = new ArrayList<>(vetorPorcentagem);
+        ArrayList<Integer> vetorPorcentagem = new ArrayList<>(this.preencherVetorPorcentagem(probabilidadesDaPopulacaoAtual));
 
-        int inicio = 0;
-
-        for(int i=0; i < vetor.size() -1; i++) {
-            if (vetor.get(i) == probabilidadeEscolhida) {
-                inicio = i;
-                break;
-            }
-        }
-
-        for(int i=inicio; i <= (inicio+probabilidadeEscolhida) - 1; i++) {
-            vetor.set(i, -1);
-        }
-
-        return vetor;
+        return vetorPorcentagem;
     }
 
     public Individuo selecionarIndividuoResultadoDaRoleta(int probabilidadeEscolhida) {

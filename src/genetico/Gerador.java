@@ -28,25 +28,33 @@ public class Gerador {
 
 
     public Gerador (float taxaDeReproducao, double taxaDeMutacao, int numeroDeGeracoes, int quantidadeDeIndividuos, ArrayList<Objeto> objetos) {
+
         for (int i = 1; i <= numeroDeGeracoes; i++) {
             for (int j = 1; j <= quantidadeDeIndividuos; j++) {
-
-
                 this.populacao.add(new Individuo(objetos, i, j));
             }
         }
 
         Collections.sort(this.populacao, Individuo.fitComparator);
 
-        this.calcularProbabilidades();
-
-        Print.mostrarPopulacao(this.populacao);
+        Print.mostrarPopulacao(this.populacao, "População Inicial");
 
         Roleta roleta = new Roleta(this.populacao);
 
+        Print.mostrarPopulacao(roleta.individuosSelecionados, "Selecionados: ");
+
+        // reproduzir os selecionados gerando novos individuos e aqui entra a taxa de reprodução
+        // levando em conta que cada par gera 2 individuos
+
+        // mutação é o proximo passo
 
 
-        //this.selecionarPares();
+        // gerar nova geração
+
+        // diseemeniação -> Remover os individuos que não respeitem o peso limite e que são as piores
+        // soluções, deixando sempre a quantidade de invdividuos baseado na quantidadeDeIndividuos
+
+
 
     }
 
@@ -100,9 +108,6 @@ public class Gerador {
 
         System.out.println("Index: " + index);
         System.out.println("Porcentagem escolhida: " + probabilidadeEscolhida);
-
-
-
 
     }
 
