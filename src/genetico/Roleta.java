@@ -7,7 +7,7 @@ public class Roleta {
     ArrayList<Individuo> populacao = new ArrayList<Individuo>();
     ArrayList<Individuo> populacaoAtual = new ArrayList<Individuo>();
 
-    ArrayList<Individuo> individuosSelecionados = new ArrayList<Individuo>();
+    ArrayList<Individuo> individuosSelecionadosParaRproducao = new ArrayList<Individuo>();
 
     public Roleta (ArrayList<Individuo> populacao) {
         this.populacao = new ArrayList<>(populacao);
@@ -18,7 +18,7 @@ public class Roleta {
 
         this.girarRoleta();
 
-        this.avaliarPopulacao(this.individuosSelecionados);
+        this.avaliarPopulacao(this.individuosSelecionadosParaRproducao);
     }
 
     public void avaliarPopulacao (ArrayList<Individuo> populacao) {
@@ -70,7 +70,7 @@ public class Roleta {
             // ficando sempre o ultimo no vetor populacaoAtual
             if(this.populacaoAtual.get(0).fitness == 0 ){
 
-                this.individuosSelecionados.add(this.populacaoAtual.get(0));
+                this.individuosSelecionadosParaRproducao.add(this.populacaoAtual.get(0));
                 this.populacaoAtual.remove(this.populacaoAtual.get(0));
 
             }
@@ -86,7 +86,7 @@ public class Roleta {
                 int probabilidadeEscolhida = vetorPorcentagem.get(index);
 
                 Individuo individuo = selecionarIndividuoResultadoDaRoleta(probabilidadeEscolhida);
-                this.individuosSelecionados.add(individuo);
+                this.individuosSelecionadosParaRproducao.add(individuo);
                 this.populacaoAtual.remove(individuo);
 
             }

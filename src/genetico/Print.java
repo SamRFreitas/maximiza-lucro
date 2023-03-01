@@ -9,9 +9,10 @@ public class Print {
 
 
         for(Individuo individuo :  populacao) {
-            System.out.print("X"+ individuo.geracao + "," +individuo.indice + " ");
-            individuo.mostrarCromossomos();
+            System.out.print(individuo.getNomeIndividuo());
+            individuo.mostrarCromossomos(individuo.cromossomo);
             System.out.print(" | Fit: " + individuo.fitness + " ");
+            System.out.print(" | Peso: " + individuo.peso + " ");
             System.out.print(" | Prob: " + individuo.probabilidade + " ");
             System.out.println();
         }

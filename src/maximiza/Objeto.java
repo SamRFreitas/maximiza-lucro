@@ -5,7 +5,7 @@ import java.util.Comparator;
 public class Objeto {
 
     int id;
-    double peso;
+    public double peso;
     public double lucro;
 
 

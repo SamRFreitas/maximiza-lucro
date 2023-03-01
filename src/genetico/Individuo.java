@@ -20,12 +20,26 @@ public class Individuo {
     public double probabilidade;
     public double fitness;
 
+    public double peso;
+
 
     public Individuo(ArrayList<Objeto> objetos, int geracao, int indice) {
         this.objetos = objetos;
         this.geracao = geracao;
         this.indice = indice;
         this.gerarCromossomos();
+    }
+
+    public Individuo(ArrayList<Objeto> objetos, int geracao, int indice, ArrayList<Integer> cromossomo) {
+        this.objetos = objetos;
+        this.geracao = geracao;
+        this.indice = indice;
+        this.cromossomo = cromossomo;
+        this.selecionarObjetos();
+    }
+
+    public String getNomeIndividuo(){
+        return ("X"+ this.geracao + "," + this.indice + " ");
     }
 
 
@@ -38,11 +52,11 @@ public class Individuo {
     }
 
 
-    public void mostrarCromossomos() {
+    public void mostrarCromossomos(ArrayList<Integer> cromossomo) {
         System.out.print("[ ");
-        for (int i = 0; i < this.objetos.size(); i++) {
-            System.out.print(this.cromossomo.get(i));
-            if (i != 4) {
+        for (int i = 0; i < cromossomo.size(); i++) {
+            System.out.print(cromossomo.get(i));
+            if (i != cromossomo.size() -1) {
                 System.out.print(" | ");
             }
         }
@@ -52,18 +66,31 @@ public class Individuo {
         // System.out.println();
     }
 
+    public void mostrarIndividuo() {
+        System.out.println("Indivíduo: " + this.getNomeIndividuo());
+        this.mostrarCromossomos(this.cromossomo);
+        System.out.println();
+        System.out.println("Fitness: " + this.fitness);
+        System.out.println();
+    }
+
 
     public void selecionarObjetos() {
 
-        double soma = 0;
+        double somaFitness = 0;
+        double somaPeso = 0;
+
         for (int i = 0; i < this.objetos.size(); i++) {
+
             if (this.cromossomo.get(i) == 1) {
-                soma += this.objetos.get(i).lucro;
+                somaFitness += this.objetos.get(i).lucro;
+                somaPeso += this.objetos.get(i).peso;
             }
 
         }
 
-        this.fitness = soma;
+        this.fitness = somaFitness;
+        this.peso = somaPeso;
 
     }
 
