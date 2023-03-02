@@ -50,7 +50,10 @@ public class Gerador {
         // reproduzir os selecionados gerando novos individuos e aqui entra a taxa de reprodução
         // levando em conta que cada par gera 2 individuos
         // Solução -> Função botarPraCruzar
-        this.botarPraCruzar(roleta.individuosSelecionadosParaRproducao);
+        ArrayList<Individuo> novaGeracao = new ArrayList<Individuo>();
+        novaGeracao = this.botarPraCruzar(roleta.individuosSelecionadosParaRproducao);
+
+        this.populacao.addAll(novaGeracao);
 
         Collections.sort(this.populacao, Individuo.fitComparator);
         // gerar nova geração
@@ -58,35 +61,38 @@ public class Gerador {
 
         Print.mostrarPopulacao(this.populacao, "População Atual Sem a Disseminação");
 
-        // mutação é o proximo passo
-
-
         // diseemeniação -> Remover os individuos que não respeitem o peso limite e que são as piores
         // soluções, deixando sempre a quantidade de invdividuos baseado na quantidadeDeIndividuos
 
 
+        this.disseminar(this.populacao);
 
     }
 
-    public void botarPraCruzar(ArrayList<Individuo> individuosSelecionados) {
+    public ArrayList<Individuo> botarPraCruzar(ArrayList<Individuo> individuosSelecionados) {
         System.out.println("-------------Botando pra cruzar-------------");
         // Utilizar cada par do vetor (Levando em conta que a taxa de reprodução é de 100%)
         // Os pares não estão organizados, eles estão na ordem que foram selecionados
 
 
-        // Vetor utilizado para adicionar a nova geração
+        // Vetor utilizado para adicionar a nova geração e aplicar a mutação depois
         ArrayList<Individuo> novaGeracao = new ArrayList<Individuo>();
 
-        for(int i=0; i < individuosSelecionados.size() - 1; i=i+2) {
+        for(int i=0; i < individuosSelecionados.size() -1; i=i+2) {
             //System.out.println(individuosSelecionados.get(i).probabilidade);
 
             // misturar os cromossomos gerando dois novos individuos
-            this.recombinar(individuosSelecionados.get(i), individuosSelecionados.get(i+1));
+            novaGeracao.addAll(this.recombinar(individuosSelecionados.get(i), individuosSelecionados.get(i+1)));
         }
+
+        // Aplicar mutação
+
         System.out.println("--------------------------------------------");
+
+        return novaGeracao;
     }
 
-    public void recombinar(Individuo individuo1, Individuo individuo2) {
+    public ArrayList<Individuo> recombinar(Individuo individuo1, Individuo individuo2) {
         System.out.println("-------------Recombinando Indivíduos-------------");
 
         Random random = new Random();
@@ -113,9 +119,12 @@ public class Gerador {
 
         this.debugarRecombinacao(individuo1, individuo2, individuo1Sublista, individuo2Sublista, novoIndividuo1, novoIndividuo2, posicao);
 
-        this.populacao.add(novoIndividuo1);
-        this.populacao.add(novoIndividuo2);
+        ArrayList<Individuo> novosIndividuos = new ArrayList<Individuo>();
+        novosIndividuos.add(novoIndividuo1);
+        novosIndividuos.add(novoIndividuo2);
         System.out.println("---------------------------------------------------");
+
+        return novosIndividuos;
     }
 
     public void debugarRecombinacao(Individuo individuo1, Individuo individuo2, ArrayList<Integer> individuoSubLista1, ArrayList<Integer> individuoSubLista2, Individuo novoIndividuo1, Individuo novoIndividuo2, int posicao) {
@@ -155,6 +164,10 @@ public class Gerador {
         System.out.println("");
     }
 
+    public void disseminar(ArrayList<Individuo> populacao) {
+        // Iterar vetor this.populacao e remover individuo > pesoLimite && pioresSolucoes
+        // No final o vetor deve possuir o mesmo tamanho de numeroDeIndividuos
+    }
 
 }
 
