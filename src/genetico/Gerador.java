@@ -20,7 +20,7 @@ public class Gerador {
     float taxaDeReproducao;
 
 
-    float taxaDeMutacao;
+    Integer taxaDeMutacao;
 
 
     int numeroDeGeracoes;
@@ -28,44 +28,52 @@ public class Gerador {
 
     int quantidadeDeIndividuos;
 
+    double pesoLimite;
 
-    public Gerador (float taxaDeReproducao, double taxaDeMutacao, int numeroDeGeracoes, int quantidadeDeIndividuos, ArrayList<Objeto> objetos) {
 
-        for (int i = 1; i <= numeroDeGeracoes; i++) {
-            for (int j = 1; j <= quantidadeDeIndividuos; j++) {
-                this.populacao.add(new Individuo(objetos, i, j));
-            }
+    public Gerador (float taxaDeReproducao, double taxaDeMutacao, int numeroDeGeracoes, int quantidadeDeIndividuos, ArrayList<Objeto> objetos, double pesoLimite) {
+
+        this.pesoLimite = pesoLimite;
+        this.quantidadeDeIndividuos = quantidadeDeIndividuos;
+        this.taxaDeMutacao = (int) Math.round(taxaDeMutacao * 100);
+
+        for (int i = 1; i <= quantidadeDeIndividuos; i++) {
+            this.populacao.add(new Individuo(objetos, 1, i));
         }
 
-        Collections.sort(this.populacao, Individuo.fitComparator);
+        for (int i = 2; i <= numeroDeGeracoes; i++) {
+            this.numeroDeGeracoes = i;
 
-        Print.mostrarPopulacao(this.populacao, "População Inicial");
+            Collections.sort(this.populacao, Individuo.fitComparator);
 
-        Roleta roleta = new Roleta(this.populacao);
+            Print.mostrarPopulacao(this.populacao, "População Inicial");
 
-        Print.mostrarPopulacao(roleta.individuosSelecionadosParaRproducao, "Indivíduos Selecionados Para Reprodução: ");
+            Roleta roleta = new Roleta(this.populacao);
 
-
-
-        // reproduzir os selecionados gerando novos individuos e aqui entra a taxa de reprodução
-        // levando em conta que cada par gera 2 individuos
-        // Solução -> Função botarPraCruzar
-        ArrayList<Individuo> novaGeracao = new ArrayList<Individuo>();
-        novaGeracao = this.botarPraCruzar(roleta.individuosSelecionadosParaRproducao);
-
-        this.populacao.addAll(novaGeracao);
-
-        Collections.sort(this.populacao, Individuo.fitComparator);
-        // gerar nova geração
-        roleta.avaliarPopulacao(this.populacao);
-
-        Print.mostrarPopulacao(this.populacao, "População Atual Sem a Disseminação");
-
-        // diseemeniação -> Remover os individuos que não respeitem o peso limite e que são as piores
-        // soluções, deixando sempre a quantidade de invdividuos baseado na quantidadeDeIndividuos
+            Print.mostrarPopulacao(roleta.individuosSelecionadosParaRproducao, "Indivíduos Selecionados Para Reprodução: ");
 
 
-        this.disseminar(this.populacao);
+
+            // reproduzir os selecionados gerando novos individuos e aqui entra a taxa de reprodução
+            // levando em conta que cada par gera 2 individuos
+            // Solução -> Função botarPraCruzar
+            ArrayList<Individuo> novaGeracao = new ArrayList<Individuo>();
+            novaGeracao = this.botarPraCruzar(roleta.individuosSelecionadosParaRproducao);
+
+            this.populacao.addAll(novaGeracao);
+
+            Collections.sort(this.populacao, Individuo.fitComparator);
+            // gerar nova geração
+            roleta.avaliarPopulacao(this.populacao);
+
+            System.out.println("Tamanho da população: " + this.populacao.size());
+            Print.mostrarPopulacao(this.populacao, "População Atual Sem a Disseminação");
+
+            // diseemeniação -> Remover os individuos que não respeitem o peso limite e que são as piores
+            // soluções, deixando sempre a quantidade de invdividuos baseado na quantidadeDeIndividuos
+            this.disseminar(this.populacao);
+
+        }
 
     }
 
@@ -85,7 +93,11 @@ public class Gerador {
             novaGeracao.addAll(this.recombinar(individuosSelecionados.get(i), individuosSelecionados.get(i+1)));
         }
 
-        // Aplicar mutação
+
+        // Aplicar mutação baseado na taxa de mutação
+        if( this.aplicaMutacao()) {
+            novaGeracao = this.aplicarMutacao(novaGeracao);
+        }
 
         System.out.println("--------------------------------------------");
 
@@ -112,9 +124,9 @@ public class Gerador {
         novoCromossomo2.addAll(individuo1Sublista);
 
 
-        Individuo novoIndividuo1 = new Individuo(individuo1.objetos, 2, individuo1.indice, novoCromossomo1);
+        Individuo novoIndividuo1 = new Individuo(individuo1.objetos, this.numeroDeGeracoes, individuo1.indice, novoCromossomo1);
 
-        Individuo novoIndividuo2 = new Individuo(individuo1.objetos, 2, individuo2.indice, novoCromossomo2);
+        Individuo novoIndividuo2 = new Individuo(individuo1.objetos, this.numeroDeGeracoes, individuo2.indice, novoCromossomo2);
 
 
         this.debugarRecombinacao(individuo1, individuo2, individuo1Sublista, individuo2Sublista, novoIndividuo1, novoIndividuo2, posicao);
@@ -152,6 +164,25 @@ public class Gerador {
                 new ArrayList<Integer>(individuo.cromossomo.subList(0, posicao + 1))
                         :
                         new ArrayList<Integer>(individuo.cromossomo.subList(posicao+1, individuo.cromossomo.size()));
+        if(numeroDoPai == 2){
+            if(posicao == 2) {
+                for(int i=0; i < (posicao * 5) + 2; i++) {
+                    System.out.print(" ");
+                }
+            } else if(posicao == 0) {
+                for(int i=0; i < (posicao * 5) + 4; i++) {
+                    System.out.print(" ");
+                }
+            } else if(posicao == 1) {
+                for(int i=0; i < (posicao * 5) + 3; i++) {
+                    System.out.print(" ");
+                }
+            }else {
+                for(int i=0; i < (posicao * 5) + 1; i++) {
+                    System.out.print(" ");
+                }
+            }
+        }
         individuo.mostrarCromossomos(sublistaIndividuo);
         System.out.println("");
     }
@@ -164,9 +195,97 @@ public class Gerador {
         System.out.println("");
     }
 
+    public boolean aplicaMutacao() {
+
+        Random random = new Random();
+        boolean aplica;
+
+        System.out.println("Taxa de mutação " + this.taxaDeMutacao + "%");
+
+        ArrayList<Integer> vetorPorcentagem = new ArrayList<Integer>(100);
+        for(int i=0; i <= 99; i++) {
+            if (i < this.taxaDeMutacao - 1) {
+                vetorPorcentagem.add(this.taxaDeMutacao);
+            } else {
+                vetorPorcentagem.add(-1);
+            }
+        }
+
+        int indexSorteado = random.nextInt(99);
+
+        System.out.println("Valor sorteado: " + vetorPorcentagem.get(indexSorteado));
+        aplica = vetorPorcentagem.get(indexSorteado) == taxaDeMutacao ? true : false;
+
+        return aplica;
+    }
+
+    public ArrayList<Individuo> aplicarMutacao(ArrayList<Individuo> novaGeracao) {
+        System.out.println("--------------Aplicando Mutação------------------------");
+
+        Print.mostrarPopulacao(novaGeracao, "Verificar se vetor antes de aplicar a mutação");
+
+        Random random = new Random();
+
+        int indexDoVetorParaApliarMutacao = random.nextInt(novaGeracao.size() - 1);
+
+        System.out.println("Index do vetor para aplicar mutação: " + indexDoVetorParaApliarMutacao);
+
+        Individuo individuoSelecionado = novaGeracao.get(indexDoVetorParaApliarMutacao);
+
+        System.out.println("Nome do Indivíduo sorteado: " + individuoSelecionado.getNomeIndividuo());
+
+        int indexDoCromossoParaMutacao = random.nextInt(individuoSelecionado.cromossomo.size() - 1);
+
+        System.out.println("Index do cromossomo para aplicar mutação: " + indexDoCromossoParaMutacao);
+
+        System.out.println("Antes da mutação: ");
+        individuoSelecionado.mostrarCromossomos(individuoSelecionado.cromossomo);
+        System.out.println("");
+
+
+        int gene = individuoSelecionado.cromossomo.get(indexDoCromossoParaMutacao) == 1 ? 0 : 1;
+        individuoSelecionado.cromossomo.set(indexDoCromossoParaMutacao, gene);
+
+        System.out.println("Depois da mutação: ");
+        individuoSelecionado.mostrarCromossomos(individuoSelecionado.cromossomo);
+        System.out.println("");
+
+        individuoSelecionado.selecionarObjetos();
+
+        Print.mostrarPopulacao(novaGeracao, "Verificar se vetor alterou o individuo");
+
+        System.out.println("--------------------------------------------------");
+
+        return novaGeracao;
+
+    }
+
     public void disseminar(ArrayList<Individuo> populacao) {
+        ArrayList<Individuo> individuosParaRemover = new ArrayList<Individuo>();
         // Iterar vetor this.populacao e remover individuo > pesoLimite && pioresSolucoes
+
+        for(Individuo individuo : populacao) {
+
+            if(individuo.peso > this.pesoLimite) {
+                individuosParaRemover.add(individuo);
+            }
+
+        }
+
+        this.populacao.removeAll(individuosParaRemover);
+
+
+        System.out.println("Tamanho da População: " + this.populacao.size());
+        Print.mostrarPopulacao(this.populacao, "População Sem Passar do Peso Limite: ");
+
         // No final o vetor deve possuir o mesmo tamanho de numeroDeIndividuos
+
+        for(int i=this.populacao.size()-1; i > quantidadeDeIndividuos -1; i--) {
+            this.populacao.remove(this.populacao.get(i));
+        }
+
+        System.out.println("Tamanho da População: " + this.populacao.size());
+        Print.mostrarPopulacao(this.populacao, "População Disseminada: ");
     }
 
 }
