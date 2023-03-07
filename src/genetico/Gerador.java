@@ -84,14 +84,16 @@ public class Gerador {
 
         }
 
-        System.out.println("---------------------------------------");
-        System.out.print("Melhor Solução: ");
-        System.out.print(this.populacao.get(0).getNomeIndividuo());
-        this.populacao.get(0).mostrarCromossomos(this.populacao.get(0).cromossomo);
-        System.out.println();
-        System.out.println("Lucro: " + this.populacao.get(0).fitness);
-        System.out.println("Peso: " + this.populacao.get(0).peso);
-
+        int maximoDeIndividuosBaseadoNaTaxaDeReproducao = (int) this.taxaDeReproducao * this.populacao.size()/100;
+        if (maximoDeIndividuosBaseadoNaTaxaDeReproducao > 2) {
+            System.out.println("---------------------------------------");
+            System.out.print("Melhor Solução: ");
+            System.out.print(this.populacao.get(0).getNomeIndividuo());
+            this.populacao.get(0).mostrarCromossomos(this.populacao.get(0).cromossomo);
+            System.out.println();
+            System.out.println("Lucro: " + this.populacao.get(0).fitness);
+            System.out.println("Peso: " + this.populacao.get(0).peso);
+        }
     }
 
     public ArrayList<Individuo> botarPraCruzar(ArrayList<Individuo> individuosSelecionados, int maximoDeIndividuosBaseadoNaTaxaDeReproducao) {
