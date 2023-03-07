@@ -17,7 +17,7 @@ public class Gerador {
     ArrayList<Individuo> populacao = new ArrayList<Individuo>();
 
     ArrayList<Individuo> individuosSelecionadosParaRproducao = new ArrayList<Individuo>();
-    float taxaDeReproducao;
+    double taxaDeReproducao;
 
 
     Integer taxaDeMutacao;
@@ -31,11 +31,12 @@ public class Gerador {
     double pesoLimite;
 
 
-    public Gerador (float taxaDeReproducao, double taxaDeMutacao, int numeroDeGeracoes, int quantidadeDeIndividuos, ArrayList<Objeto> objetos, double pesoLimite) {
+    public Gerador (double taxaDeReproducao, double taxaDeMutacao, int numeroDeGeracoes, int quantidadeDeIndividuos, ArrayList<Objeto> objetos, double pesoLimite) {
 
         this.pesoLimite = pesoLimite;
         this.quantidadeDeIndividuos = quantidadeDeIndividuos;
         this.taxaDeMutacao = (int) Math.round(taxaDeMutacao * 100);
+        this.taxaDeReproducao = (int) Math.round(taxaDeReproducao * 100);
 
         for (int i = 1; i <= quantidadeDeIndividuos; i++) {
             this.populacao.add(new Individuo(objetos, 1, i));
@@ -58,7 +59,15 @@ public class Gerador {
             // levando em conta que cada par gera 2 individuos
             // Solução -> Função botarPraCruzar
             ArrayList<Individuo> novaGeracao = new ArrayList<Individuo>();
-            novaGeracao = this.botarPraCruzar(roleta.individuosSelecionadosParaRproducao);
+            int maximoDeIndividuosBaseadoNaTaxaDeReproducao = (int) this.taxaDeReproducao * this.populacao.size()/100;
+            if (maximoDeIndividuosBaseadoNaTaxaDeReproducao < 2) {
+                System.out.println("Baseado na Taxa de Reprodução: " + this.taxaDeReproducao + "%");
+                System.out.println("A quantidade de pares de indivíduos disponíveis não consegue se reproduzir!");
+                System.out.println("Por favor, aumente a taxa de reprodução e rode o programa novamente.");
+                break;
+            } else {
+                novaGeracao = this.botarPraCruzar(roleta.individuosSelecionadosParaRproducao, maximoDeIndividuosBaseadoNaTaxaDeReproducao);
+            }
 
             this.populacao.addAll(novaGeracao);
 
@@ -75,9 +84,17 @@ public class Gerador {
 
         }
 
+        System.out.println("---------------------------------------");
+        System.out.print("Melhor Solução: ");
+        System.out.print(this.populacao.get(0).getNomeIndividuo());
+        this.populacao.get(0).mostrarCromossomos(this.populacao.get(0).cromossomo);
+        System.out.println();
+        System.out.println("Lucro: " + this.populacao.get(0).fitness);
+        System.out.println("Peso: " + this.populacao.get(0).peso);
+
     }
 
-    public ArrayList<Individuo> botarPraCruzar(ArrayList<Individuo> individuosSelecionados) {
+    public ArrayList<Individuo> botarPraCruzar(ArrayList<Individuo> individuosSelecionados, int maximoDeIndividuosBaseadoNaTaxaDeReproducao) {
         System.out.println("-------------Botando pra cruzar-------------");
         // Utilizar cada par do vetor (Levando em conta que a taxa de reprodução é de 100%)
         // Os pares não estão organizados, eles estão na ordem que foram selecionados
@@ -86,7 +103,9 @@ public class Gerador {
         // Vetor utilizado para adicionar a nova geração e aplicar a mutação depois
         ArrayList<Individuo> novaGeracao = new ArrayList<Individuo>();
 
-        for(int i=0; i < individuosSelecionados.size() -1; i=i+2) {
+        int maximoDeParesBaseadoNaTaxaDeReproducao = (int) this.taxaDeReproducao * individuosSelecionados.size()/100;
+
+        for(int i=0; i < maximoDeIndividuosBaseadoNaTaxaDeReproducao; i=i+2) {
             //System.out.println(individuosSelecionados.get(i).probabilidade);
 
             // misturar os cromossomos gerando dois novos individuos

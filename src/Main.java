@@ -23,7 +23,7 @@ public class Main {
         objetos.add(obj4);
         objetos.add(obj5);
 
-        Gerador gerador =  new Gerador(1, 1, 5, 4, objetos, 2000);
+        Gerador gerador =  new Gerador(0.5, 1, 5, 4, objetos, 2000);
 
     }
 

@@ -19,7 +19,6 @@ public class Individuo {
 
     public double probabilidade;
     public double fitness;
-
     public double peso;
 
 
